@@ -75,3 +75,58 @@ test('konversi satuan', async ({ page }) => {
   await expect(page.getByLabel('Feet')).toHaveValue('5');
   await expect(page.getByLabel('Inches')).toHaveValue('10.9');
 });
+
+test('bahasa Indonesia: /id termuat, lang id, satu h1, lolos aksesibilitas', async ({
+  page,
+}) => {
+  const res = await page.goto('/id');
+  expect(res?.status()).toBe(200);
+  await expect(page.locator('html')).toHaveAttribute('lang', 'id');
+  await expect(page.locator('h1')).toHaveCount(1);
+  await expect(page.locator('h1')).toContainText(/Tubuh/i);
+  const results = await new AxeBuilder({ page })
+    .withTags(['wcag2a', 'wcag2aa'])
+    .analyze();
+  expect(results.violations).toEqual([]);
+});
+
+test('pengalih bahasa: en ke id dan kembali', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('link', { name: 'Switch to Bahasa Indonesia' }).click();
+  await expect(page).toHaveURL(/\/id$/);
+  await expect(page.locator('html')).toHaveAttribute('lang', 'id');
+  await page.getByRole('link', { name: 'Ganti ke English' }).click();
+  await expect(page).toHaveURL(/localhost:3000\/?$/);
+  await expect(page.locator('html')).toHaveAttribute('lang', 'en');
+});
+
+test('id: hitung BMI memakai koma desimal dan label Indonesia', async ({
+  page,
+}) => {
+  await page.goto('/id');
+  await page.getByRole('button', { name: 'Hitung', exact: true }).click();
+  const panel = page.locator('[aria-live]');
+  await expect(panel.getByText('BMI = 23,0')).toBeVisible();
+  await expect(panel.getByText('Normal', { exact: true })).toBeVisible();
+  await expect(panel.getByText('12,9 kg/m³')).toBeVisible();
+});
+
+test('id: anak menampilkan persentil berbahasa Indonesia', async ({ page }) => {
+  await page.goto('/id');
+  await page.getByRole('button', { name: 'Satuan metrik' }).click();
+  await page.getByLabel('Umur (2 - 120)').fill('10');
+  await page.getByLabel('Tinggi (cm)').fill('140');
+  await page.getByLabel('Berat (kg)').fill('35');
+  await page.getByRole('button', { name: 'Hitung', exact: true }).click();
+  const panel = page.locator('[aria-live]');
+  await expect(panel.getByText('Persentil BMI menurut umur')).toBeVisible();
+  await expect(panel.getByText(/ke-\d+/)).toBeVisible();
+});
+
+test('id: URL tidak dikenal menampilkan 404 bahasa Indonesia', async ({
+  page,
+}) => {
+  const res = await page.goto('/id/tidak-ada');
+  expect(res?.status()).toBe(404);
+  await expect(page.locator('h1')).toContainText(/tidak ditemukan/i);
+});

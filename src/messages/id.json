@@ -1,0 +1,191 @@
+{
+  "meta": {
+    "siteName": "Indeks Massa Tubuh",
+    "title": "Kalkulator Indeks Massa Tubuh",
+    "description": "Kalkulator BMI dari Mufigu: masukkan umur, tinggi, dan berat badan untuk melihat BMI, BMI Prime, Ponderal Index, dan rentang berat badan sehat.",
+    "notFound": "Tidak ditemukan"
+  },
+  "common": {
+    "skip": "Lewati ke konten utama"
+  },
+  "header": {
+    "homeLabel": "{name}, beranda",
+    "language": "Bahasa",
+    "switchTo": "Ganti ke {language}"
+  },
+  "footer": {
+    "disclaimer": "Hanya untuk informasi umum. Bukan saran medis.",
+    "copy": "© {year} <brand>Mufigu</brand> · Kalkulator indeks massa tubuh."
+  },
+  "hero": {
+    "outline": "Indeks Massa",
+    "solid": "Tubuh",
+    "lede": "Masukkan umur, tinggi, dan berat badan Anda untuk melihat BMI, BMI Prime, Ponderal Index, dan rentang berat badan yang sehat untuk Anda.",
+    "cta": "Hitung BMI"
+  },
+  "calc": {
+    "ghost": "Cek",
+    "main": "BMI Anda",
+    "units": "Satuan",
+    "tabUs": "Satuan US",
+    "tabMetric": "Satuan metrik",
+    "tabOther": "Satuan lain",
+    "age": "Umur (2 - 120)",
+    "gender": "Jenis kelamin",
+    "male": "Pria",
+    "female": "Wanita",
+    "heightFeet": "Tinggi (kaki)",
+    "heightInches": "Tinggi (inci)",
+    "weightPounds": "Berat (pound)",
+    "heightCm": "Tinggi (cm)",
+    "weightKg": "Berat (kg)",
+    "errAge": "Umur harus berupa bilangan bulat dari 2 sampai 120.",
+    "errHeight": "Masukkan tinggi badan yang valid.",
+    "errWeight": "Masukkan berat badan yang valid.",
+    "calculate": "Hitung",
+    "clear": "Reset",
+    "emptyForm": "Masukkan data Anda lalu tekan Hitung untuk melihat BMI Anda.",
+    "emptyConvert": "Konversi antara kaki/inci dan sentimeter, atau pound dan kilogram, lalu pakai hasilnya di tab lain.",
+    "feet": "Kaki",
+    "inches": "Inci",
+    "centimeters": "Sentimeter",
+    "pounds": "Pound",
+    "kilograms": "Kilogram"
+  },
+  "result": {
+    "title": "Hasil Anda",
+    "bmi": "BMI = {value}",
+    "percentile": "Persentil BMI menurut umur",
+    "percentileValue": "{edge, select, low {<1} high {>99} other {ke-{n}}}",
+    "rangeAge": "Rentang BMI sehat menurut umur",
+    "range": "Rentang BMI sehat",
+    "weight": "Berat sehat untuk tinggi ini",
+    "prime": "BMI Prime",
+    "ponderal": "Ponderal Index",
+    "lbs": "{value} lbs",
+    "kg": "{value} kg"
+  },
+  "cat": {
+    "adult": {
+      "severeThinness": "Kurus Berat",
+      "moderateThinness": "Kurus Sedang",
+      "mildThinness": "Kurus Ringan",
+      "normal": "Normal",
+      "overweight": "Kelebihan Berat Badan",
+      "obese1": "Obesitas Kelas I",
+      "obese2": "Obesitas Kelas II",
+      "obese3": "Obesitas Kelas III"
+    },
+    "child": {
+      "underweight": "Berat badan kurang",
+      "healthy": "Berat badan sehat",
+      "atRisk": "Berisiko kelebihan berat badan",
+      "overweight": "Kelebihan berat badan"
+    },
+    "childRange": {
+      "underweight": "Kurang dari persentil ke-5",
+      "healthy": "Persentil ke-5 hingga kurang dari ke-85",
+      "atRisk": "Persentil ke-85 hingga kurang dari ke-95",
+      "overweight": "Persentil ke-95 atau lebih"
+    }
+  },
+  "chart": {
+    "aria": "Grafik berat badan terhadap tinggi badan dengan garis BMI 16, 17, 18,5, 25, 30, 35, dan 40",
+    "height": "Tinggi (cm)",
+    "weight": "Berat (kg)",
+    "under": "Kurus",
+    "normal": "Normal",
+    "over": "Kelebihan berat",
+    "obese": "Obesitas",
+    "note": "Garis menunjukkan nilai BMI (kg/m²)."
+  },
+  "info": {
+    "about": {
+      "ghost": "Apa itu",
+      "main": "BMI",
+      "p1": "Body Mass Index (BMI), atau Indeks Massa Tubuh (IMT), adalah ukuran lemak tubuh berdasarkan tinggi dan berat badan. BMI memperkirakan seberapa kurus atau gemuk seseorang, dan menjadi indikator umum apakah berat badannya sehat untuk tinggi badannya.",
+      "p2": "Kategori untuk membaca angka ini berbeda menurut wilayah dan umur, dan batasnya bisa berbeda di beberapa negara, seperti di Asia. Kalkulator ini memakai kategori World Health Organization (WHO) untuk dewasa dan kurva pertumbuhan CDC untuk anak dan remaja."
+    },
+    "adult": {
+      "ghost": "Kategori",
+      "main": "BMI Dewasa",
+      "intro": "Untuk dewasa berumur 20 tahun ke atas, BMI dibaca sama untuk pria dan wanita, memakai klasifikasi WHO.",
+      "aria": "Tabel kategori BMI dewasa",
+      "caption": "Kategori BMI untuk dewasa",
+      "colClass": "Klasifikasi",
+      "colBmi": "BMI (kg/m²)",
+      "colPrime": "BMI Prime"
+    },
+    "children": {
+      "ghost": "Anak &",
+      "main": "Remaja",
+      "intro": "Untuk umur 2 sampai 20 tahun, BMI tidak dibaca dari batas tetap. BMI dibandingkan dengan anak lain yang seumur dan sama jenis kelaminnya memakai kurva persentil BMI menurut umur dari CDC, karena lemak tubuh berubah seiring pertumbuhan dan berbeda antara anak laki-laki dan perempuan.",
+      "aria": "Tabel kategori BMI anak dan remaja",
+      "caption": "Kategori BMI untuk anak dan remaja",
+      "colCategory": "Kategori",
+      "colRange": "Rentang persentil"
+    },
+    "formulas": {
+      "ghost": "Cara",
+      "main": "Menghitung",
+      "bmiMetric": {
+        "title": "BMI, satuan metrik",
+        "note": "Berat dalam kilogram, tinggi dalam meter.",
+        "formula": "BMI = berat (kg) / tinggi² (m)"
+      },
+      "bmiUs": {
+        "title": "BMI, satuan US",
+        "note": "Berat dalam pound, tinggi dalam inci.",
+        "formula": "BMI = 703 × berat (lb) / tinggi² (inci)"
+      },
+      "prime": {
+        "title": "BMI Prime",
+        "note": "Perbandingan BMI Anda dengan 25, batas atas rentang normal. Di bawah 0,74 tergolong kurus, di atas 1 tergolong kelebihan berat badan.",
+        "formula": "BMI Prime = BMI / 25"
+      },
+      "ponderal": {
+        "title": "Ponderal Index",
+        "note": "Memakai tinggi pangkat tiga, bukan pangkat dua, sehingga lebih andal untuk orang yang sangat tinggi atau sangat pendek. Ditampilkan di sini dalam kg/m³.",
+        "formula": "PI = berat (kg) / tinggi³ (m)"
+      },
+      "example": "Contoh: orang dengan tinggi 5 kaki 10 inci (70 inci) dan berat 160 lb memiliki BMI = 703 × 160 / 70² = 22,95, yang dibulatkan menjadi 23,0 dan masuk rentang Normal. Dalam satuan US, Ponderal Index ditulis sebagai tinggi (inci) / ∛berat (lb), bentuk kebalikannya, yang menghasilkan 12,9 untuk orang yang sama.",
+      "healthy": "Rentang berat sehat pada hasil adalah berat yang menghasilkan BMI 18,5 sampai 25 pada tinggi Anda. Untuk anak dan remaja, dipakai BMI persentil ke-5 sampai ke-85 menurut umur dan jenis kelamin mereka."
+    },
+    "risks": {
+      "ghost": "Risiko",
+      "main": "Kesehatan",
+      "overTitle": "Risiko kelebihan berat badan",
+      "overItems": [
+        "Tekanan darah tinggi",
+        "Diabetes tipe II",
+        "Penyakit jantung koroner",
+        "Stroke",
+        "Beberapa jenis kanker",
+        "Sleep apnea (henti napas saat tidur)",
+        "Risiko kematian yang lebih tinggi secara keseluruhan"
+      ],
+      "underTitle": "Risiko berat badan kurang",
+      "underItems": [
+        "Malnutrisi",
+        "Osteoporosis",
+        "Sistem kekebalan tubuh melemah",
+        "Gangguan tumbuh kembang pada anak dan remaja",
+        "Gangguan reproduksi",
+        "Risiko kematian yang lebih tinggi secara keseluruhan",
+        "Bisa juga menjadi tanda kondisi seperti anoreksia nervosa"
+      ]
+    },
+    "limits": {
+      "ghost": "Batasan",
+      "main": "BMI",
+      "p1": "BMI mengukur berat badan terhadap tinggi, bukan lemak tubuh. BMI tidak memperhitungkan massa otot, kepadatan tulang, umur, jenis kelamin, atau tingkat aktivitas, sehingga orang berotot bisa tergolong kelebihan berat badan padahal lemaknya sedikit. Untuk sekitar 90 sampai 95 persen orang, BMI cukup menggambarkan lemak tubuh, tetapi tetap perlu dipakai bersama ukuran lain dan saran tenaga kesehatan.",
+      "disclaimer": "Kalkulator ini hanya untuk informasi umum dan bukan saran medis."
+    }
+  },
+  "notFound": {
+    "outline": "Halaman",
+    "solid": "tidak ditemukan",
+    "text": "Halaman itu tidak ada.",
+    "back": "Kembali ke kalkulator"
+  }
+}

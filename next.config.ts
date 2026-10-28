@@ -1,4 +1,5 @@
 import type { NextConfig } from 'next';
+import createNextIntlPlugin from 'next-intl/plugin';
 
 const isDev = process.env.NODE_ENV === 'development';
 
@@ -38,9 +39,12 @@ const securityHeaders = [
 const nextConfig: NextConfig = {
   poweredByHeader: false, // jangan membocorkan framework lewat header X-Powered-By
   output: 'standalone', // wajib untuk Dockerfile
+  experimental: { globalNotFound: true }, // 404 untuk URL tanpa layout bahasa, mis. /foo.png dan /api/...
   async headers() {
     return [{ source: '/(.*)', headers: securityHeaders }];
   },
 };
 
-export default nextConfig;
+const withNextIntl = createNextIntlPlugin('./src/i18n/request.ts');
+
+export default withNextIntl(nextConfig);

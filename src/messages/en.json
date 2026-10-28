@@ -1,0 +1,191 @@
+{
+  "meta": {
+    "siteName": "Body Mass Index",
+    "title": "Body Mass Index Calculator",
+    "description": "A BMI calculator by Mufigu: enter your age, height and weight to see your BMI, BMI Prime, Ponderal Index and healthy weight range.",
+    "notFound": "Not found"
+  },
+  "common": {
+    "skip": "Skip to content"
+  },
+  "header": {
+    "homeLabel": "{name} home",
+    "language": "Language",
+    "switchTo": "Switch to {language}"
+  },
+  "footer": {
+    "disclaimer": "For general information only. Not medical advice.",
+    "copy": "© {year} <brand>Mufigu</brand> · A body mass index calculator."
+  },
+  "hero": {
+    "outline": "Body Mass",
+    "solid": "Index",
+    "lede": "Enter your age, height and weight to see your BMI, BMI Prime, Ponderal Index and the weight range that is healthy for you.",
+    "cta": "Calculate BMI"
+  },
+  "calc": {
+    "ghost": "Check your",
+    "main": "BMI",
+    "units": "Units",
+    "tabUs": "US units",
+    "tabMetric": "Metric units",
+    "tabOther": "Other units",
+    "age": "Age (2 - 120)",
+    "gender": "Gender",
+    "male": "Male",
+    "female": "Female",
+    "heightFeet": "Height (feet)",
+    "heightInches": "Height (inches)",
+    "weightPounds": "Weight (pounds)",
+    "heightCm": "Height (cm)",
+    "weightKg": "Weight (kg)",
+    "errAge": "Age must be a whole number from 2 to 120.",
+    "errHeight": "Please enter a valid height.",
+    "errWeight": "Please enter a valid weight.",
+    "calculate": "Calculate",
+    "clear": "Clear",
+    "emptyForm": "Enter your details and press Calculate to see your BMI.",
+    "emptyConvert": "Convert between feet/inches and centimeters, or pounds and kilograms, then use the result in the other tabs.",
+    "feet": "Feet",
+    "inches": "Inches",
+    "centimeters": "Centimeters",
+    "pounds": "Pounds",
+    "kilograms": "Kilograms"
+  },
+  "result": {
+    "title": "Your result",
+    "bmi": "BMI = {value}",
+    "percentile": "BMI-for-age percentile",
+    "percentileValue": "{edge, select, low {<1st} high {>99th} other {{n, selectordinal, one {#st} two {#nd} few {#rd} other {#th}}}}",
+    "rangeAge": "Healthy BMI range for age",
+    "range": "Healthy BMI range",
+    "weight": "Healthy weight for the height",
+    "prime": "BMI Prime",
+    "ponderal": "Ponderal Index",
+    "lbs": "{value} lbs",
+    "kg": "{value} kg"
+  },
+  "cat": {
+    "adult": {
+      "severeThinness": "Severe Thinness",
+      "moderateThinness": "Moderate Thinness",
+      "mildThinness": "Mild Thinness",
+      "normal": "Normal",
+      "overweight": "Overweight",
+      "obese1": "Obese Class I",
+      "obese2": "Obese Class II",
+      "obese3": "Obese Class III"
+    },
+    "child": {
+      "underweight": "Underweight",
+      "healthy": "Healthy weight",
+      "atRisk": "At risk of overweight",
+      "overweight": "Overweight"
+    },
+    "childRange": {
+      "underweight": "Less than the 5th percentile",
+      "healthy": "5th to less than the 85th percentile",
+      "atRisk": "85th to less than the 95th percentile",
+      "overweight": "95th percentile or greater"
+    }
+  },
+  "chart": {
+    "aria": "Chart of weight against height with lines for BMI 16, 17, 18.5, 25, 30, 35 and 40",
+    "height": "Height (cm)",
+    "weight": "Weight (kg)",
+    "under": "Underweight",
+    "normal": "Normal",
+    "over": "Overweight",
+    "obese": "Obese",
+    "note": "Lines show BMI values (kg/m²)."
+  },
+  "info": {
+    "about": {
+      "ghost": "What is",
+      "main": "BMI",
+      "p1": "Body Mass Index (BMI) is a measure of body fat based on height and weight. It estimates how lean or heavy a person is, and it is a general indicator of whether their weight is healthy for their height.",
+      "p2": "The categories used to read the number vary by region and age, and cutoffs can differ in some countries, such as those in Asia. This calculator uses the World Health Organization categories for adults and CDC growth charts for children and teens."
+    },
+    "adult": {
+      "ghost": "Adult",
+      "main": "BMI Categories",
+      "intro": "For adults aged 20 and older, BMI is read the same way for men and women, using the WHO classification.",
+      "aria": "Adult BMI categories table",
+      "caption": "BMI categories for adults",
+      "colClass": "Classification",
+      "colBmi": "BMI (kg/m²)",
+      "colPrime": "BMI Prime"
+    },
+    "children": {
+      "ghost": "Children &",
+      "main": "Teens",
+      "intro": "For ages 2 to 20, BMI is not read from fixed cutoffs. It is compared with other children of the same age and sex using CDC BMI-for-age percentile charts, because body fat changes as children grow and differs between boys and girls.",
+      "aria": "Children and teens BMI categories table",
+      "caption": "BMI categories for children and teens",
+      "colCategory": "Category",
+      "colRange": "Percentile range"
+    },
+    "formulas": {
+      "ghost": "How it is",
+      "main": "Calculated",
+      "bmiMetric": {
+        "title": "BMI, metric units",
+        "note": "Weight in kilograms, height in meters.",
+        "formula": "BMI = weight (kg) / height² (m)"
+      },
+      "bmiUs": {
+        "title": "BMI, US units",
+        "note": "Weight in pounds, height in inches.",
+        "formula": "BMI = 703 × weight (lb) / height² (in)"
+      },
+      "prime": {
+        "title": "BMI Prime",
+        "note": "The ratio of your BMI to 25, the upper limit of the normal range. Below 0.74 is thin, above 1 is overweight.",
+        "formula": "BMI Prime = BMI / 25"
+      },
+      "ponderal": {
+        "title": "Ponderal Index",
+        "note": "Uses height cubed instead of squared, which is more reliable for very tall or very short people. Shown here in kg/m³.",
+        "formula": "PI = weight (kg) / height³ (m)"
+      },
+      "example": "Example: a person who is 5 feet 10 inches (70 inches) tall and weighs 160 lb has BMI = 703 × 160 / 70² = 22.95, which rounds to 23.0 and falls in the Normal range. In US units the Ponderal Index is written as height (in) / ∛weight (lb), the inverse form, which gives 12.9 for the same person.",
+      "healthy": "The healthy weight range shown in the result is the weight that gives a BMI of 18.5 to 25 at your height. For children and teens it uses the 5th to 85th percentile BMI for their age and sex."
+    },
+    "risks": {
+      "ghost": "Health",
+      "main": "Risks",
+      "overTitle": "Risks of being overweight",
+      "overItems": [
+        "High blood pressure",
+        "Type II diabetes",
+        "Coronary heart disease",
+        "Stroke",
+        "Certain cancers",
+        "Sleep apnea",
+        "Higher risk of death overall"
+      ],
+      "underTitle": "Risks of being underweight",
+      "underItems": [
+        "Malnutrition",
+        "Osteoporosis",
+        "Weakened immune system",
+        "Developmental issues in children and teens",
+        "Reproductive issues",
+        "Higher risk of death overall",
+        "It can also be a sign of a condition such as anorexia nervosa"
+      ]
+    },
+    "limits": {
+      "ghost": "Limits of",
+      "main": "BMI",
+      "p1": "BMI measures weight relative to height, not body fat. It does not account for muscle mass, bone density, age, sex or activity level, so a muscular person can score as overweight while carrying little fat. For roughly 90 to 95 percent of people BMI is a fair indicator of body fat, but it should be used alongside other measures and a health professional's advice.",
+      "disclaimer": "This calculator is for general information only and is not medical advice."
+    }
+  },
+  "notFound": {
+    "outline": "Page",
+    "solid": "not found",
+    "text": "That page doesn't exist.",
+    "back": "Back to calculator"
+  }
+}

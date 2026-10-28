@@ -1,3 +1,4 @@
+import { getLocale, getTranslations } from 'next-intl/server';
 import { BmiChart } from '@/components/sections/BmiChart';
 import {
   sectionGhost,
@@ -5,6 +6,7 @@ import {
   sectionTitle,
 } from '@/components/ui/styles';
 import { adultCategories, childCategories, toneColor } from '@/lib/bmi';
+import { nfa } from '@/lib/format';
 
 const prose = 'max-w-[46rem] text-[1.05rem] leading-relaxed text-body';
 const th =
@@ -37,26 +39,22 @@ function Block({
   );
 }
 
-const range = (min: number, max: number) =>
-  min === 0 ? `< ${max}` : max === Infinity ? `> ${min}` : `${min} - ${max}`;
-const primeRange = (min: number, max: number) => range(min / 25, max / 25);
-
 function Formula({
   title,
-  children,
+  formula,
   note,
 }: {
   title: string;
-  children: React.ReactNode;
-  note?: string;
+  formula: string;
+  note: string;
 }) {
   return (
     <div className="rounded-[10px] border border-line p-6">
       <h3 className="text-[.8rem] font-medium tracking-[.08em] text-muted uppercase">
         {title}
       </h3>
-      <p className="mt-3 text-[1.15rem] font-semibold text-black">{children}</p>
-      {note && <p className="mt-2 text-[.9rem] text-muted">{note}</p>}
+      <p className="mt-3 text-[1.15rem] font-semibold text-black">{formula}</p>
+      <p className="mt-2 text-[.9rem] text-muted">{note}</p>
     </div>
   );
 }
@@ -80,62 +78,72 @@ function Points({ title, items }: { title: string; items: string[] }) {
   );
 }
 
-export function InfoSections() {
+function Swatch({ tone }: { tone: keyof typeof toneColor }) {
+  return (
+    <span
+      className="mr-3 inline-block h-3 w-3 rounded-[3px] align-middle"
+      style={{ background: toneColor[tone] }}
+      aria-hidden="true"
+    />
+  );
+}
+
+export async function InfoSections() {
+  const t = await getTranslations('info');
+  const tc = await getTranslations('cat');
+  const locale = await getLocale();
+
+  const n = (v: number) => nfa(locale, v);
+  const range = (min: number, max: number) =>
+    min === 0
+      ? `< ${n(max)}`
+      : max === Infinity
+        ? `> ${n(min)}`
+        : `${n(min)} - ${n(max)}`;
+
   return (
     <>
-      <Block id="about-bmi" ghost="What is" main="BMI">
-        <p className={prose}>
-          Body Mass Index (BMI) is a measure of body fat based on height and
-          weight. It estimates how lean or heavy a person is, and it is a
-          general indicator of whether their weight is healthy for their height.
-        </p>
-        <p className={prose}>
-          The categories used to read the number vary by region and age, and
-          cutoffs can differ in some countries, such as those in Asia. This
-          calculator uses the World Health Organization categories for adults
-          and CDC growth charts for children and teens.
-        </p>
+      <Block id="about-bmi" ghost={t('about.ghost')} main={t('about.main')}>
+        <p className={prose}>{t('about.p1')}</p>
+        <p className={prose}>{t('about.p2')}</p>
       </Block>
 
-      <Block id="adult-categories" ghost="Adult" main="BMI Categories">
-        <p className={prose}>
-          For adults aged 20 and older, BMI is read the same way for men and
-          women, using the WHO classification.
-        </p>
+      <Block
+        id="adult-categories"
+        ghost={t('adult.ghost')}
+        main={t('adult.main')}
+      >
+        <p className={prose}>{t('adult.intro')}</p>
         <div
           className="overflow-x-auto"
           tabIndex={0}
           role="region"
-          aria-label="Adult BMI categories table"
+          aria-label={t('adult.aria')}
         >
           <table className="w-full min-w-[30rem] border-collapse text-left">
-            <caption className="sr-only">BMI categories for adults</caption>
+            <caption className="sr-only">{t('adult.caption')}</caption>
             <thead>
               <tr>
                 <th className={th} scope="col">
-                  Classification
+                  {t('adult.colClass')}
                 </th>
                 <th className={th} scope="col">
-                  BMI (kg/m²)
+                  {t('adult.colBmi')}
                 </th>
                 <th className={th} scope="col">
-                  BMI Prime
+                  {t('adult.colPrime')}
                 </th>
               </tr>
             </thead>
             <tbody>
               {adultCategories.map((c) => (
-                <tr key={c.label}>
+                <tr key={c.key}>
                   <th scope="row" className={`${td} font-semibold text-black`}>
-                    <span
-                      className="mr-3 inline-block h-3 w-3 rounded-[3px] align-middle"
-                      style={{ background: toneColor[c.tone] }}
-                      aria-hidden="true"
-                    />
-                    {c.label}
+                    <Swatch tone={c.tone} />
+                    {tc(`adult.${c.key}`)}
                   </th>
                   <td className={td}>{range(c.min, c.max)}</td>
-                  <td className={td}>{primeRange(c.min, c.max)}</td>
+                  <td className={td}>{range(c.min / 25, c.max / 25)}</td>
                 </tr>
               ))}
             </tbody>
@@ -144,45 +152,38 @@ export function InfoSections() {
         <BmiChart />
       </Block>
 
-      <Block id="children" ghost="Children &" main="Teens">
-        <p className={prose}>
-          For ages 2 to 20, BMI is not read from fixed cutoffs. It is compared
-          with other children of the same age and sex using CDC BMI-for-age
-          percentile charts, because body fat changes as children grow and
-          differs between boys and girls.
-        </p>
+      <Block
+        id="children"
+        ghost={t('children.ghost')}
+        main={t('children.main')}
+      >
+        <p className={prose}>{t('children.intro')}</p>
         <div
           className="overflow-x-auto"
           tabIndex={0}
           role="region"
-          aria-label="Children and teens BMI categories table"
+          aria-label={t('children.aria')}
         >
           <table className="w-full min-w-[30rem] border-collapse text-left">
-            <caption className="sr-only">
-              BMI categories for children and teens
-            </caption>
+            <caption className="sr-only">{t('children.caption')}</caption>
             <thead>
               <tr>
                 <th className={th} scope="col">
-                  Category
+                  {t('children.colCategory')}
                 </th>
                 <th className={th} scope="col">
-                  Percentile range
+                  {t('children.colRange')}
                 </th>
               </tr>
             </thead>
             <tbody>
               {childCategories.map((c) => (
-                <tr key={c.label}>
+                <tr key={c.key}>
                   <th scope="row" className={`${td} font-semibold text-black`}>
-                    <span
-                      className="mr-3 inline-block h-3 w-3 rounded-[3px] align-middle"
-                      style={{ background: toneColor[c.tone] }}
-                      aria-hidden="true"
-                    />
-                    {c.label}
+                    <Swatch tone={c.tone} />
+                    {tc(`child.${c.key}`)}
                   </th>
-                  <td className={td}>{c.range}</td>
+                  <td className={td}>{tc(`childRange.${c.key}`)}</td>
                 </tr>
               ))}
             </tbody>
@@ -190,88 +191,42 @@ export function InfoSections() {
         </div>
       </Block>
 
-      <Block id="formulas" ghost="How it is" main="Calculated">
+      <Block
+        id="formulas"
+        ghost={t('formulas.ghost')}
+        main={t('formulas.main')}
+      >
         <div className="grid grid-cols-[repeat(2,minmax(0,1fr))] gap-4 max760:grid-cols-[1fr]">
-          <Formula
-            title="BMI, metric units"
-            note="Weight in kilograms, height in meters."
-          >
-            BMI = weight (kg) / height² (m)
-          </Formula>
-          <Formula
-            title="BMI, US units"
-            note="Weight in pounds, height in inches."
-          >
-            BMI = 703 × weight (lb) / height² (in)
-          </Formula>
-          <Formula
-            title="BMI Prime"
-            note="The ratio of your BMI to 25, the upper limit of the normal range. Below 0.74 is thin, above 1 is overweight."
-          >
-            BMI Prime = BMI / 25
-          </Formula>
-          <Formula
-            title="Ponderal Index"
-            note="Uses height cubed instead of squared, which is more reliable for very tall or very short people. Shown here in kg/m³."
-          >
-            PI = weight (kg) / height³ (m)
-          </Formula>
+          {(['bmiMetric', 'bmiUs', 'prime', 'ponderal'] as const).map((k) => (
+            <Formula
+              key={k}
+              title={t(`formulas.${k}.title`)}
+              formula={t(`formulas.${k}.formula`)}
+              note={t(`formulas.${k}.note`)}
+            />
+          ))}
         </div>
-        <p className={prose}>
-          Example: a person who is 5&apos;10&quot; (70 inches) and weighs 160 lb
-          has BMI = 703 × 160 / 70² = 22.95, which rounds to 23.0 and falls in
-          the Normal range. In US units the Ponderal Index is written as height
-          (in) / ∛weight (lb), the inverse form, which gives 12.9 for the same
-          person.
-        </p>
-        <p className={prose}>
-          The healthy weight range shown in the result is the weight that gives
-          a BMI of 18.5 to 25 at your height. For children and teens it uses the
-          5th to 85th percentile BMI for their age and sex.
-        </p>
+        <p className={prose}>{t('formulas.example')}</p>
+        <p className={prose}>{t('formulas.healthy')}</p>
       </Block>
 
-      <Block id="risks" ghost="Health" main="Risks">
+      <Block id="risks" ghost={t('risks.ghost')} main={t('risks.main')}>
         <div className="grid grid-cols-[repeat(2,minmax(0,1fr))] gap-4 max760:grid-cols-[1fr]">
           <Points
-            title="Risks of being overweight"
-            items={[
-              'High blood pressure',
-              'Type II diabetes',
-              'Coronary heart disease',
-              'Stroke',
-              'Certain cancers',
-              'Sleep apnea',
-              'Higher risk of death overall',
-            ]}
+            title={t('risks.overTitle')}
+            items={t.raw('risks.overItems') as string[]}
           />
           <Points
-            title="Risks of being underweight"
-            items={[
-              'Malnutrition',
-              'Osteoporosis',
-              'Weakened immune system',
-              'Developmental issues in children and teens',
-              'Reproductive issues',
-              'Higher risk of death overall',
-              'It can also be a sign of a condition such as anorexia nervosa',
-            ]}
+            title={t('risks.underTitle')}
+            items={t.raw('risks.underItems') as string[]}
           />
         </div>
       </Block>
 
-      <Block id="limitations" ghost="Limits of" main="BMI">
-        <p className={prose}>
-          BMI measures weight relative to height, not body fat. It does not
-          account for muscle mass, bone density, age, sex or activity level, so
-          a muscular person can score as overweight while carrying little fat.
-          For roughly 90 to 95 percent of people BMI is a fair indicator of body
-          fat, but it should be used alongside other measures and a health
-          professional&apos;s advice.
-        </p>
+      <Block id="limitations" ghost={t('limits.ghost')} main={t('limits.main')}>
+        <p className={prose}>{t('limits.p1')}</p>
         <p className="max-w-[46rem] text-[.9rem] text-muted">
-          This calculator is for general information only and is not medical
-          advice.
+          {t('limits.disclaimer')}
         </p>
       </Block>
     </>

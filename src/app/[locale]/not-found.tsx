@@ -1,19 +1,21 @@
 import type { Metadata } from 'next';
+import { getTranslations } from 'next-intl/server';
 import { BigTitle } from '@/components/sections/BigTitle';
 import { Button } from '@/components/ui/Button';
 import { heroCopy, heroSection, lede } from '@/components/ui/styles';
 
-export const metadata: Metadata = { title: 'Not found' };
+export const metadata: Metadata = { title: '404' };
 
-export default function NotFound() {
+export default async function NotFound() {
+  const t = await getTranslations('notFound');
   return (
     <section className={heroSection}>
       <div className="wrap">
         <div className={heroCopy}>
-          <BigTitle level="h1" outline="Page" solid="not found" />
-          <p className={lede}>That page doesn&apos;t exist.</p>
+          <BigTitle level="h1" outline={t('outline')} solid={t('solid')} />
+          <p className={lede}>{t('text')}</p>
           <Button more href="/">
-            Back to calculator
+            {t('back')}
           </Button>
         </div>
       </div>

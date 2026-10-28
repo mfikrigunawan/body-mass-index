@@ -2,7 +2,7 @@
 
 Kalkulator BMI sekaligus halaman referensinya, dibuat sebagai case study untuk [mufigu.com](https://mufigu.com). Masukkan umur, jenis kelamin, tinggi, dan berat badan untuk melihat BMI, kategori, BMI Prime, Ponderal Index, dan rentang berat badan sehat. Tanpa backend, tanpa database, dan tanpa pelacakan.
 
-Dibangun dengan Next.js 16 (App Router), React 19, TypeScript, Tailwind CSS v4, GSAP + ScrollTrigger, dan Lenis. Tampilan situs dalam bahasa Inggris.
+Dibangun dengan Next.js 16 (App Router), React 19, TypeScript, Tailwind CSS v4, GSAP + ScrollTrigger, Lenis, dan next-intl. Tersedia dalam dua bahasa: Inggris di `/` dan Indonesia di `/id`, dengan pengalih bahasa di header (pola yang sama dengan mufigu.com).
 
 ## Yang dihitung
 
@@ -45,12 +45,15 @@ Tes e2e memakai Google Chrome yang sudah terpasang, jadi tidak ada yang diunduh 
 ```
 src/
 ├── config/site.config.ts       # identitas situs: nama, URL, warna
+├── i18n/                       # routing bahasa (en, id) dan konfigurasi next-intl
+├── messages/en.json, id.json   # seluruh teks situs per bahasa
+├── proxy.ts                    # middleware bahasa (/ = en, /id = id)
 ├── content/cdc-bmi-lms.ts      # tabel LMS BMI-menurut-umur CDC (umur 24-240,5 bulan)
 ├── lib/bmi.ts                  # semua rumus BMI dan tabel kategori
 ├── components/
 │   ├── calculator/             # formulir kalkulator dan panel hasil
 │   └── sections/               # tabel kategori, grafik, dan bagian artikel
-└── app/                        # halaman, layout, 404, robots, health check
+└── app/[locale]/               # halaman, layout, dan 404 per bahasa; robots dan health check di app/
 ```
 
 ## Sumber data
@@ -58,13 +61,17 @@ src/
 - Kategori dewasa: [World Health Organization](https://www.who.int).
 - Anak dan remaja: [CDC growth charts](https://www.cdc.gov/growthcharts/), file data BMI-menurut-umur `bmiagerev.csv`.
 
+## Menambah atau mengubah teks
+
+Semua teks ada di `src/messages/en.json` dan `src/messages/id.json`. Ubah di kedua file dengan kunci yang sama. Untuk menambah bahasa baru, daftarkan di `src/i18n/routing.ts` dan buat file `messages`-nya.
+
 ## Disclaimer
 
 Hanya untuk informasi umum. BMI mengukur berat badan terhadap tinggi, bukan lemak tubuh, dan bukan saran medis. Konsultasikan kesehatan Anda dengan tenaga kesehatan.
 
 ## Deploy
 
-Sudah ada `Dockerfile` (output standalone Next.js). Situs ini diatur `noindex`; hapus pengaturan robots di `src/app/layout.tsx`, `src/app/robots.ts`, dan `next.config.ts` kalau ingin diindeks mesin pencari.
+Sudah ada `Dockerfile` (output standalone Next.js). Situs ini diatur `noindex`; hapus pengaturan robots di `src/app/[locale]/layout.tsx`, `src/app/robots.ts`, dan `next.config.ts` kalau ingin diindeks mesin pencari.
 
 ## Lisensi
 

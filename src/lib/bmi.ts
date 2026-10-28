@@ -16,45 +16,29 @@ export const toneColor: Record<Tone, string> = {
   obese: '#efd3cb',
 };
 
-/** Kategori dewasa WHO. `min` termasuk, `max` tidak (BMI 25.0 = Overweight). */
+/** Kategori dewasa WHO. "min" termasuk, "max" tidak (BMI 25.0 = Overweight). Nama tampilan ada di messages (cat.adult.<key>). */
 export const adultCategories: {
-  label: string;
+  key: string;
   min: number;
   max: number;
   tone: Tone;
 }[] = [
-  { label: 'Severe Thinness', min: 0, max: 16, tone: 'under' },
-  { label: 'Moderate Thinness', min: 16, max: 17, tone: 'under' },
-  { label: 'Mild Thinness', min: 17, max: 18.5, tone: 'under' },
-  { label: 'Normal', min: 18.5, max: 25, tone: 'normal' },
-  { label: 'Overweight', min: 25, max: 30, tone: 'over' },
-  { label: 'Obese Class I', min: 30, max: 35, tone: 'obese' },
-  { label: 'Obese Class II', min: 35, max: 40, tone: 'obese' },
-  { label: 'Obese Class III', min: 40, max: Infinity, tone: 'obese' },
+  { key: 'severeThinness', min: 0, max: 16, tone: 'under' },
+  { key: 'moderateThinness', min: 16, max: 17, tone: 'under' },
+  { key: 'mildThinness', min: 17, max: 18.5, tone: 'under' },
+  { key: 'normal', min: 18.5, max: 25, tone: 'normal' },
+  { key: 'overweight', min: 25, max: 30, tone: 'over' },
+  { key: 'obese1', min: 30, max: 35, tone: 'obese' },
+  { key: 'obese2', min: 35, max: 40, tone: 'obese' },
+  { key: 'obese3', min: 40, max: Infinity, tone: 'obese' },
 ];
 
-/** Kategori anak dan remaja (CDC), berdasarkan persentil BMI menurut umur dan jenis kelamin. */
-export const childCategories: {
-  label: string;
-  range: string;
-  tone: Tone;
-}[] = [
-  {
-    label: 'Underweight',
-    range: 'Less than the 5th percentile',
-    tone: 'under',
-  },
-  {
-    label: 'Healthy weight',
-    range: '5th to less than the 85th percentile',
-    tone: 'normal',
-  },
-  {
-    label: 'At risk of overweight',
-    range: '85th to less than the 95th percentile',
-    tone: 'over',
-  },
-  { label: 'Overweight', range: '95th percentile or greater', tone: 'obese' },
+/** Kategori anak dan remaja (CDC), berdasarkan persentil BMI menurut umur dan jenis kelamin. Nama dan rentang ada di messages (cat.child.<key>, cat.childRange.<key>). */
+export const childCategories: { key: string; tone: Tone }[] = [
+  { key: 'underweight', tone: 'under' },
+  { key: 'healthy', tone: 'normal' },
+  { key: 'atRisk', tone: 'over' },
+  { key: 'overweight', tone: 'obese' },
 ];
 
 export const bmiOf = (kg: number, m: number) => kg / (m * m);
@@ -119,7 +103,7 @@ export function childCategory(percentile: number) {
 export interface Result {
   kind: 'adult' | 'child';
   bmi: number;
-  label: string;
+  key: string;
   tone: Tone;
   /** Hanya anak dan remaja */
   percentile?: number;
@@ -150,7 +134,7 @@ export function calculate(input: {
     return {
       kind: 'child',
       bmi,
-      label: c.label,
+      key: c.key,
       tone: c.tone,
       percentile,
       lowBmi,
@@ -163,7 +147,7 @@ export function calculate(input: {
   return {
     kind: 'adult',
     bmi,
-    label: c.label,
+    key: c.key,
     tone: c.tone,
     lowBmi: 18.5,
     highBmi: 25,
@@ -174,11 +158,10 @@ export function calculate(input: {
   };
 }
 
-export function ordinal(n: number) {
-  if (n < 1) return '<1st';
-  if (n > 99) return '>99th';
-  const r = Math.round(n);
-  const s = ['th', 'st', 'nd', 'rd'];
-  const v = r % 100;
-  return r + (s[(v - 20) % 10] || s[v] || s[0]);
+/** Persentil untuk ditampilkan: nilai bulat, dan penanda untuk di bawah 1 atau di atas 99. */
+export function percentileParts(p: number) {
+  return {
+    n: Math.round(p),
+    edge: p < 1 ? 'low' : p > 99 ? 'high' : 'mid',
+  } as const;
 }

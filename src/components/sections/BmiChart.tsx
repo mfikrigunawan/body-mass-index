@@ -1,3 +1,4 @@
+import { getTranslations } from 'next-intl/server';
 import { toneColor, type Tone } from '@/lib/bmi';
 
 // Grafik tinggi-berat dengan garis BMI (SVG statis, dibuat di server).
@@ -26,22 +27,28 @@ const band = (from: number, to: number) =>
     .map((h) => `L${x(h).toFixed(1)} ${y(weightAt(to, h)).toFixed(1)}`)
     .join(' ')} Z`;
 
-const bands: { label: string; from: number; to: number; tone: Tone }[] = [
-  { label: 'Underweight', from: 0, to: 18.5, tone: 'under' },
-  { label: 'Normal', from: 18.5, to: 25, tone: 'normal' },
-  { label: 'Overweight', from: 25, to: 30, tone: 'over' },
-  { label: 'Obese', from: 30, to: 99, tone: 'obese' },
+const bands: {
+  key: 'under' | 'normal' | 'over' | 'obese';
+  from: number;
+  to: number;
+  tone: Tone;
+}[] = [
+  { key: 'under', from: 0, to: 18.5, tone: 'under' },
+  { key: 'normal', from: 18.5, to: 25, tone: 'normal' },
+  { key: 'over', from: 25, to: 30, tone: 'over' },
+  { key: 'obese', from: 30, to: 99, tone: 'obese' },
 ];
 const lines = [16, 17, 18.5, 25, 30, 35, 40];
 
-export function BmiChart() {
+export async function BmiChart() {
+  const t = await getTranslations('chart');
   return (
     <figure>
       <svg
         viewBox={`0 0 ${W} ${H}`}
         className="h-auto w-full"
         role="img"
-        aria-label="Chart of weight against height with lines for BMI 16, 17, 18.5, 25, 30, 35 and 40"
+        aria-label={t('aria')}
       >
         <defs>
           <clipPath id="plot">
@@ -55,11 +62,7 @@ export function BmiChart() {
         </defs>
         <g clipPath="url(#plot)">
           {bands.map((b) => (
-            <path
-              key={b.label}
-              d={band(b.from, b.to)}
-              fill={toneColor[b.tone]}
-            />
+            <path key={b.key} d={band(b.from, b.to)} fill={toneColor[b.tone]} />
           ))}
           {lines.map((b) => (
             <path
@@ -113,7 +116,7 @@ export function BmiChart() {
           textAnchor="middle"
           fill="#262626"
         >
-          Height (cm)
+          {t('height')}
         </text>
         <text
           transform={`translate(14 ${H / 2}) rotate(-90)`}
@@ -121,21 +124,21 @@ export function BmiChart() {
           textAnchor="middle"
           fill="#262626"
         >
-          Weight (kg)
+          {t('weight')}
         </text>
       </svg>
       <figcaption className="mt-3 flex flex-wrap gap-x-5 gap-y-1 text-[.85rem] text-muted">
         {bands.map((b) => (
-          <span key={b.label} className="inline-flex items-center gap-2">
+          <span key={b.key} className="inline-flex items-center gap-2">
             <span
               className="h-3 w-3 rounded-[3px]"
               style={{ background: toneColor[b.tone] }}
               aria-hidden="true"
             />
-            {b.label}
+            {t(b.key)}
           </span>
         ))}
-        <span>Lines show BMI values (kg/m²).</span>
+        <span>{t('note')}</span>
       </figcaption>
     </figure>
   );

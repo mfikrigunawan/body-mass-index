@@ -1,6 +1,7 @@
 'use client';
 
 import { useId, useState, type ComponentProps } from 'react';
+import { useLocale, useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/Button';
 import {
   adultCategories,
@@ -8,19 +9,20 @@ import {
   CM_PER_IN,
   KG_PER_LB,
   LB_PER_KG,
-  ordinal,
+  percentileParts,
   toneColor,
   type Result,
   type Sex,
   type Tone,
 } from '@/lib/bmi';
+import { nf, nfa } from '@/lib/format';
 import { cn } from '@/lib/utils';
 
 type Tab = 'us' | 'metric' | 'other';
-const tabs: { id: Tab; label: string }[] = [
-  { id: 'us', label: 'US units' },
-  { id: 'metric', label: 'Metric units' },
-  { id: 'other', label: 'Other units' },
+const tabs: { id: Tab; key: 'tabUs' | 'tabMetric' | 'tabOther' }[] = [
+  { id: 'us', key: 'tabUs' },
+  { id: 'metric', key: 'tabMetric' },
+  { id: 'other', key: 'tabOther' },
 ];
 
 const fieldLabel =
@@ -32,7 +34,6 @@ const num = (v: FormDataEntryValue | null) => {
   const n = parseFloat(String(v ?? ''));
   return Number.isFinite(n) ? n : NaN;
 };
-const fmt = (n: number, d = 1) => n.toFixed(d);
 const round1 = (n: number) => String(Math.round(n * 10) / 10);
 
 function Field({
@@ -58,6 +59,7 @@ function Field({
 }
 
 export function BmiCalculator() {
+  const t = useTranslations('calc');
   const [tab, setTab] = useState<Tab>('us');
   const [result, setResult] = useState<Result | null>(null);
   const [error, setError] = useState('');
@@ -85,11 +87,11 @@ export function BmiCalculator() {
 
     const problem =
       !Number.isInteger(age) || age < 2 || age > 120
-        ? 'Age must be a whole number from 2 to 120.'
+        ? t('errAge')
         : !(cm >= 50 && cm <= 272)
-          ? 'Please enter a valid height.'
+          ? t('errHeight')
           : !(kg >= 2 && kg <= 650)
-            ? 'Please enter a valid weight.'
+            ? t('errWeight')
             : '';
     setError(problem);
     setResult(problem ? null : calculate({ age, sex, kg, m: cm / 100 }));
@@ -101,22 +103,22 @@ export function BmiCalculator() {
         <div
           className="mb-6 flex flex-wrap gap-2"
           role="group"
-          aria-label="Units"
+          aria-label={t('units')}
         >
-          {tabs.map((t) => (
+          {tabs.map((x) => (
             <button
-              key={t.id}
+              key={x.id}
               type="button"
-              aria-pressed={tab === t.id}
-              onClick={() => switchTab(t.id)}
+              aria-pressed={tab === x.id}
+              onClick={() => switchTab(x.id)}
               className={cn(
                 'rounded-[999px] border-[1.5px] border-brand-primary px-5 py-2 text-[.9rem] font-semibold transition-colors duration-250',
-                tab === t.id
+                tab === x.id
                   ? 'bg-brand-primary text-white'
                   : 'text-brand-primary hover:bg-chip',
               )}
             >
-              {t.label}
+              {t(x.key)}
             </button>
           ))}
         </div>
@@ -126,9 +128,11 @@ export function BmiCalculator() {
         ) : (
           <form onSubmit={onSubmit} noValidate className="grid gap-5">
             <div className="grid grid-cols-[repeat(2,minmax(0,1fr))] gap-4 max640:grid-cols-[1fr]">
-              <Field label="Age (2 - 120)" name="age" defaultValue={25} />
+              <Field label={t('age')} name="age" defaultValue={25} />
               <fieldset className="grid gap-1.5">
-                <legend className={cn(fieldLabel, 'mb-1.5')}>Gender</legend>
+                <legend className={cn(fieldLabel, 'mb-1.5')}>
+                  {t('gender')}
+                </legend>
                 <div className="flex gap-2">
                   {(['male', 'female'] as const).map((s) => (
                     <label key={s} className="flex-1">
@@ -139,8 +143,8 @@ export function BmiCalculator() {
                         defaultChecked={s === 'male'}
                         className="peer sr-only"
                       />
-                      <span className="block cursor-pointer rounded-[10px] border border-[#cfcfcf] py-3 text-center capitalize transition-colors duration-250 peer-checked:border-brand-primary peer-checked:bg-brand-primary peer-checked:text-white peer-focus-visible:outline-2 peer-focus-visible:outline-offset-3 peer-focus-visible:outline-(--focus)">
-                        {s}
+                      <span className="block cursor-pointer rounded-[10px] border border-[#cfcfcf] py-3 text-center transition-colors duration-250 peer-checked:border-brand-primary peer-checked:bg-brand-primary peer-checked:text-white peer-focus-visible:outline-2 peer-focus-visible:outline-offset-3 peer-focus-visible:outline-(--focus)">
+                        {t(s)}
                       </span>
                     </label>
                   ))}
@@ -151,15 +155,19 @@ export function BmiCalculator() {
             {tab === 'us' ? (
               <>
                 <div className="grid grid-cols-[repeat(2,minmax(0,1fr))] gap-4">
-                  <Field label="Height (feet)" name="ft" defaultValue={5} />
-                  <Field label="Height (inches)" name="in" defaultValue={10} />
+                  <Field label={t('heightFeet')} name="ft" defaultValue={5} />
+                  <Field
+                    label={t('heightInches')}
+                    name="in"
+                    defaultValue={10}
+                  />
                 </div>
-                <Field label="Weight (pounds)" name="lb" defaultValue={160} />
+                <Field label={t('weightPounds')} name="lb" defaultValue={160} />
               </>
             ) : (
               <>
-                <Field label="Height (cm)" name="cm" defaultValue={178} />
-                <Field label="Weight (kg)" name="kg" defaultValue={72} />
+                <Field label={t('heightCm')} name="cm" defaultValue={178} />
+                <Field label={t('weightKg')} name="kg" defaultValue={72} />
               </>
             )}
 
@@ -173,7 +181,7 @@ export function BmiCalculator() {
             )}
             <div className="flex flex-wrap gap-3">
               <Button type="submit" more>
-                Calculate
+                {t('calculate')}
                 <ArrowIcon />
               </Button>
               <Button
@@ -184,7 +192,7 @@ export function BmiCalculator() {
                   setError('');
                 }}
               >
-                Clear
+                {t('clear')}
               </Button>
             </div>
           </form>
@@ -196,9 +204,7 @@ export function BmiCalculator() {
           <ResultPanel r={result} us={tab === 'us'} />
         ) : (
           <div className="rounded-[10px] border border-dashed border-[#cfcfcf] p-[clamp(1.25rem,2.5vw,2.25rem)] text-muted">
-            {tab === 'other'
-              ? 'Convert between feet/inches and centimeters, or pounds and kilograms, then use the result in the other tabs.'
-              : 'Enter your details and press Calculate to see your BMI.'}
+            {tab === 'other' ? t('emptyConvert') : t('emptyForm')}
           </div>
         )}
       </div>
@@ -223,6 +229,7 @@ function ArrowIcon() {
 }
 
 function Converter() {
+  const t = useTranslations('calc');
   const [v, setV] = useState({
     ft: '5',
     inch: '10',
@@ -252,24 +259,24 @@ function Converter() {
     <div className="grid gap-5">
       <div className="grid grid-cols-[repeat(3,minmax(0,1fr))] gap-4 max640:grid-cols-[repeat(2,minmax(0,1fr))]">
         <Field
-          label="Feet"
+          label={t('feet')}
           value={v.ft}
           onChange={(e) => setHeightImp(e.target.value, v.inch)}
         />
         <Field
-          label="Inches"
+          label={t('inches')}
           value={v.inch}
           onChange={(e) => setHeightImp(v.ft, e.target.value)}
         />
         <Field
-          label="Centimeters"
+          label={t('centimeters')}
           value={v.cm}
           onChange={(e) => setCm(e.target.value)}
         />
       </div>
       <div className="grid grid-cols-[repeat(2,minmax(0,1fr))] gap-4">
         <Field
-          label="Pounds"
+          label={t('pounds')}
           value={v.lb}
           onChange={(e) =>
             setV((o) => ({
@@ -283,7 +290,7 @@ function Converter() {
           }
         />
         <Field
-          label="Kilograms"
+          label={t('kilograms')}
           value={v.kg}
           onChange={(e) =>
             setV((o) => ({
@@ -344,8 +351,13 @@ const childSegments: { w: number; tone: Tone }[] = [
 ];
 
 function ResultPanel({ r, us }: { r: Result; us: boolean }) {
+  const t = useTranslations('result');
+  const tc = useTranslations('cat');
+  const locale = useLocale();
   const w = (kg: number) =>
-    us ? `${fmt(kg * LB_PER_KG)} lbs` : `${fmt(kg)} kg`;
+    us
+      ? t('lbs', { value: nf(locale, kg * LB_PER_KG) })
+      : t('kg', { value: nf(locale, kg) });
   const pos =
     r.kind === 'child'
       ? r.percentile!
@@ -356,28 +368,34 @@ function ResultPanel({ r, us }: { r: Result; us: boolean }) {
   const rows: [string, string][] =
     r.kind === 'child'
       ? [
-          ['BMI-for-age percentile', ordinal(r.percentile!)],
           [
-            'Healthy BMI range for age',
-            `${fmt(r.lowBmi)} - ${fmt(r.highBmi)} kg/m²`,
+            t('percentile'),
+            t('percentileValue', percentileParts(r.percentile!)),
           ],
-          ['Healthy weight for the height', `${w(r.lowKg)} - ${w(r.highKg)}`],
+          [
+            t('rangeAge'),
+            `${nf(locale, r.lowBmi)} - ${nf(locale, r.highBmi)} kg/m²`,
+          ],
+          [t('weight'), `${w(r.lowKg)} - ${w(r.highKg)}`],
         ]
       : [
-          ['Healthy BMI range', '18.5 kg/m² - 25 kg/m²'],
-          ['Healthy weight for the height', `${w(r.lowKg)} - ${w(r.highKg)}`],
-          ['BMI Prime', fmt(r.prime!, 2)],
-          ['Ponderal Index', `${fmt(r.ponderal!)} kg/m³`],
+          [
+            t('range'),
+            `${nfa(locale, r.lowBmi)} kg/m² - ${nfa(locale, r.highBmi)} kg/m²`,
+          ],
+          [t('weight'), `${w(r.lowKg)} - ${w(r.highKg)}`],
+          [t('prime'), nf(locale, r.prime!, 2)],
+          [t('ponderal'), `${nf(locale, r.ponderal!)} kg/m³`],
         ];
 
   return (
     <div className="rounded-[10px] bg-brand-primary p-[clamp(1.25rem,2.5vw,2.25rem)] text-white">
       <p className="text-[.8rem] font-medium tracking-[.08em] text-[#bdbdbd] uppercase">
-        Your result
+        {t('title')}
       </p>
       <p className="mt-2 flex flex-wrap items-baseline gap-x-3 gap-y-1">
         <span className="text-[length:clamp(3rem,6vw,5rem)] leading-none font-extrabold tracking-[-.04em]">
-          BMI = {fmt(r.bmi)}
+          {t('bmi', { value: nf(locale, r.bmi) })}
         </span>
         <span className="text-[1rem] text-[#bdbdbd]">kg/m²</span>
       </p>
@@ -385,7 +403,7 @@ function ResultPanel({ r, us }: { r: Result; us: boolean }) {
         className="mt-3 inline-block rounded-[999px] px-4 py-1 text-[.95rem] font-semibold text-black"
         style={{ background: toneColor[r.tone] }}
       >
-        {r.label}
+        {tc(`${r.kind}.${r.key}`)}
       </p>
       <Scale
         segments={r.kind === 'child' ? childSegments : adultSegments}

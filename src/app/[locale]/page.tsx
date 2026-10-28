@@ -1,3 +1,4 @@
+import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { BmiCalculator } from '@/components/calculator/BmiCalculator';
 import { PageAnimations } from '@/components/motion/PageAnimations';
 import { BigTitle } from '@/components/sections/BigTitle';
@@ -12,7 +13,15 @@ import {
   sectionTitle,
 } from '@/components/ui/styles';
 
-export default function HomePage() {
+export default async function HomePage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  setRequestLocale(locale);
+  const t = await getTranslations();
+
   return (
     <>
       <PageAnimations />
@@ -22,16 +31,15 @@ export default function HomePage() {
             <BigTitle
               level="h1"
               id="hero-title"
-              outline="Body Mass"
-              solid="Index"
+              outline={t('hero.outline')}
+              solid={t('hero.solid')}
             />
             <p className={lede} data-intro>
-              Enter your age, height and weight to see your BMI, BMI Prime,
-              Ponderal Index and the weight range that is healthy for you.
+              {t('hero.lede')}
             </p>
             <div className="flex flex-wrap gap-3" data-intro>
               <Button more href="#calculator">
-                Calculate BMI
+                {t('hero.cta')}
               </Button>
             </div>
           </div>
@@ -45,8 +53,8 @@ export default function HomePage() {
       >
         <div className="wrap">
           <h2 className={sectionTitle} id="calculator-title" data-title>
-            <span className={sectionGhost}>Check your</span>
-            <span className={sectionMain}>BMI</span>
+            <span className={sectionGhost}>{t('calc.ghost')}</span>
+            <span className={sectionMain}>{t('calc.main')}</span>
           </h2>
           <BmiCalculator />
         </div>
